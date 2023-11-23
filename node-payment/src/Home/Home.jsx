@@ -1,18 +1,28 @@
 import { Box, Button, TextField } from '@mui/material';
 import React, { useState } from 'react';
+import axios from "axios";
 
 const Home = () => {
     const [name, setName] = useState('');
     const [order_id, setOrder_id] = useState('');
     const [total, setTotal] = useState(0);
 
-    const proses = async () => {
+    const process = async () => {
         const data = {
             nama: name,
             order_id: order_id,
-            total: total
+            total: parseFloat(total)
         };
         console.log(data);
+        const config = {
+            headers: {
+                "Content-Type" : "application/json"
+            }
+        }
+
+        const response = await axios.post("http://localhost:1000/api/payment/process-transaction", data, config)
+
+        console.log(response)
     };
 
     return (
@@ -22,7 +32,7 @@ const Home = () => {
             <TextField type='number' label='Total' value={total} onChange={(e) => setTotal(e.target.value)} sx={{ mb: 2 }} />
 
             <Box>
-                <Button onClick={proses} variant='outlined'>
+                <Button onClick={process} variant='outlined'>
                     Proses Bayar
                 </Button>
             </Box>
